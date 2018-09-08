@@ -1,0 +1,21 @@
+{
+  "name": "reactNYTScraper",
+  "version": "1.0.0",
+  "description": "NYT scraper and article saver using Reactjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/max77p/reactNYTScraper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/max77p/reactNYTScraper/issues"
+  },
+  "homepage": "https://github.com/max77p/reactNYTScraper#readme"
+}
