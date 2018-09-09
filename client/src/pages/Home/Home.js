@@ -3,6 +3,7 @@ import Jumbotron from "../../components/Jumbotron";
 import Results from "../../components/Results";
 import API from "../../utils/API";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 class Home extends Component {
   constructor(props){
@@ -31,9 +32,37 @@ class Home extends Component {
   handleSearch=event=>{
     event.preventDefault();
   console.log("button was clicked");
-  console.log(this.state.search);
-  console.log(this.state.records);
-  }
+  var queryURL;
+  var search=this.state.search;
+  var records=this.state.records;
+  var startyear=this.state.startYear;
+  var endyear=this.state.endYear;
+
+  var queryUrl;
+    if (search && !startyear && !endyear) {//gives whatever search
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" + "&q=" + search;
+    }
+    else if (search && startyear && endyear) {//gives specific search
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" + "&q=" + search + "&begin_date=" + startyear + "&end_date=" + endyear;
+
+    }
+    else if (search && startyear && !endyear){
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" + "&q=" + search + "&begin_date=" + startyear;
+    }
+    else if (search && !startyear && endyear){
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" + "&q=" + search +"&end_date=" + endyear;
+    }
+    else {
+        alert("please input at least search");//tells user to at least put search item
+    }
+
+    event.preventDefault();
+    axios.get(queryURL).then(res=>{
+    console.log(res);
+     }
+   )
+
+}
 
   render() {
     return ([
@@ -52,11 +81,11 @@ class Home extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="startYear">Start Year (Optional):</label>
-                        <input type="date" className="form-control" id="startYear" placeholder="YYYYMMDD"/>
+                        <input type="date" className="form-control" id="startYear" placeholder="YYYYMMDD" value={this.state.startYear} onChange={this.handleChange} name="startYear"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="endYear">End Year (Optional):</label>
-                        <input type="date" className="form-control" id="endYear" placeholder="YYYYMMDD"/>
+                        <input type="date" className="form-control" id="endYear" placeholder="YYYYMMDD" value={this.state.endYear} onChange={this.handleChange} name="endYear"/>
                     </div>
 
                     <button type="submit" className="btn btn-primary searchBtn" onClick={this.handleSearch}>
