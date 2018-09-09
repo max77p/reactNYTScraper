@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import API from "../../utils/API";
 import { SavedResults } from "../../components/Results";
 import Jumbotron from "../../components/Jumbotron";
+import Nav from "../../components/Nav";
 
 class Saved extends Component {
   constructor(props) {
     super(props);
     this.handleDelete = this.handleDelete.bind(this);
     this.state = {
-      articles: []
+      articles: [],
+      activeClass:1
     };
   }
   componentDidMount() {
@@ -32,6 +34,7 @@ class Saved extends Component {
   render() {
     console.log(this.state.articles);
     return [
+      <Nav activeclass={this.state.activeClass}/>,
       <Jumbotron heading="Saved" />,
       <SavedResults
         heading="Saved Articles"

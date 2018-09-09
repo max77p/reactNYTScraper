@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Jumbotron from "../../components/Jumbotron";
-import {Results} from "../../components/Results";
+import Nav from "../../components/Nav";
+import { Results } from "../../components/Results";
 import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -11,13 +12,15 @@ class Home extends Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleClear = this.handleClear.bind(this);
 
     this.state = {
       search: "",
       records: "",
       startYear: "",
       endYear: "",
-      articles: []
+      articles: [],
+      activeClass:0
     };
   }
 
@@ -121,9 +124,21 @@ class Home extends Component {
     });
   };
 
+  handleClear = event => {
+    event.preventDefault();
+    this.setState(prevState => {
+      return {
+        articles: []
+      };
+    });
+  };
+
+  
+
   render() {
     return [
-      <Jumbotron heading="New York Times Search"/>,
+        <Nav activeclass={this.state.activeClass}/>,
+      <Jumbotron heading="New York Times Search" />,
       <div className="panel panel-info">
         <div className="panel-heading">
           <i className="far fa-newspaper fa-fw ficon" />
@@ -193,14 +208,22 @@ class Home extends Component {
               <i className="fas fa-search fa-fw ficon" />
               Search
             </button>
-            <button type="submit" className="btn btn-primary clearBtn">
+            <button
+              type="submit"
+              className="btn btn-primary clearBtn"
+              onClick={this.handleClear}
+            >
               <i className="far fa-trash-alt fa-fw ficon" />
               Clear
             </button>
           </form>
         </div>
       </div>,
-      <Results articles={this.state.articles} click={this.handleSave} heading="Top Articles" />
+      <Results
+        articles={this.state.articles}
+        click={this.handleSave}
+        heading="Top Articles"
+      />
     ];
   }
 }
