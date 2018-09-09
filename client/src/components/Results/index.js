@@ -1,1 +1,2 @@
-export {default} from "./Results";
+export * from "./Results";
+export * from "./SavedResults";

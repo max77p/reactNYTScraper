@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Jumbotron from "../../components/Jumbotron";
-import Results from "../../components/Results";
+import {Results} from "../../components/Results";
 import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -105,15 +105,15 @@ class Home extends Component {
     console.log(this.state.articles);
     this.state.articles.map(x => {
       if (x._id === id) {
-        console.log(x.snippet);
-        console.log(x.web_url);
-        console.log(x.pubdate);
-        console.log(x.author);
+        // console.log(x.snippet);
+        // console.log(x.web_url);
+        // console.log(x.pub_date);
+        // console.log(x["byline"].original);
         API.saveArticle({
-          title: x.snippet,
+          snippet: x.snippet,
           link: x.web_url,
-          pubdate: x.pubdate,
-          author: x.author
+          pubdate: x.pub_date,
+          author: x["byline"].original
         })
           .then(res => console.log(res))
           .catch(err => console.log(err.response));
@@ -123,7 +123,7 @@ class Home extends Component {
 
   render() {
     return [
-      <Jumbotron />,
+      <Jumbotron heading="New York Times Search"/>,
       <div className="panel panel-info">
         <div className="panel-heading">
           <i className="far fa-newspaper fa-fw ficon" />
@@ -200,7 +200,7 @@ class Home extends Component {
           </form>
         </div>
       </div>,
-      <Results articles={this.state.articles} click={this.handleSave} />
+      <Results articles={this.state.articles} click={this.handleSave} heading="Top Articles" />
     ];
   }
 }

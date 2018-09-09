@@ -2,7 +2,7 @@ import React from "react";
 import "./Results.css";
 import List from "../List";
 
-export const Results = props => {
+export const SavedResults = props => {
   let content = [];
   console.log(props.articles);
   console.log(Object.keys(props.articles))
@@ -12,20 +12,21 @@ export const Results = props => {
       var pubdate;
       var author;
       // console.log(x)
-      if ("pub_date" in x) {//check if publication date exists
-        pubdate = x.pub_date.slice(0, 10);
+      if ("pubdate" in x) {//check if publication date exists
+        console.log(x.pubdate);
+        pubdate = x.pubdate.slice(0, 10);
         console.log(pubdate);
       } else {
         pubdate = "Publication date not available";
       }
 
-      if ("byline" in x) {//check if author name exists in database
-        author = x["byline"].original;
+      if ("author" in x) {//check if author name exists in database
+        author = x.author;
         console.log(author);
       } else {
         author = "Author not available";
       }
-      content.push(<List articles={x} key={x._id} pubdate={pubdate} author={author} click={props.click} setting="search"/>);
+      content.push(<List articles={x} key={x._id} pubdate={pubdate} author={author} click={props.click} setting="saved"/>);
     });
   }
 
@@ -39,5 +40,4 @@ export const Results = props => {
     </div>
   );
 };
-
 

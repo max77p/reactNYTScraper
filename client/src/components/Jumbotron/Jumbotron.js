@@ -4,8 +4,7 @@ const Jumbotron = props => {
   return (
     <div className="jumbotron">
       <h1 className="display-4">
-        <i className="far fa-newspaper fa-fw ficon" />
-        New York Times Search
+        <i className="far fa-newspaper fa-fw ficon" /> {props.heading}
       </h1>
     </div>
   );
