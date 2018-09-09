@@ -1,6 +1,10 @@
-const router=require("express").Router();
-const articleController=require("../../controllers/articleController");
+const router = require("express").Router();
+const articleController = require("../../controllers/articleController");
 
-router.route("/home").get(articleController.findAll);
+router
+  .route("/")
+  .get(articleController.findAll)
+  .post(articleController.save);
+  
 
-module.exports=router;
+module.exports = router;

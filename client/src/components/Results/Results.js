@@ -5,22 +5,6 @@ import List from "../List";
 const Results = props => {
   let content = [];
   console.log(props.articles);
-
-  // if ("pub_date" in el) {//check if publication date exists
-  //   pubdate = el.pub_date.slice(0, 10);
-  //   console.log(pubdate);
-  // } else {
-  //   pubdate = "Publication date not available";
-  // }
-
-  // if ('byline' in el) {//check if author name exists in database
-  //     author = (el['byline'].original);
-  //     console.log(author);
-  // }
-  // else {
-  //     author = "Author not available";
-  // }
-
   if (props.articles) {
     // content.push(<List articles={this.state.articles} />);
     props.articles.map(x => {
@@ -40,7 +24,7 @@ const Results = props => {
       } else {
         author = "Author not available";
       }
-      content.push(<List articles={x} key={x._id} pubdate={pubdate} author={author}/>);
+      content.push(<List articles={x} key={x._id} pubdate={pubdate} author={author} click={props.click}/>);
     });
   }
 

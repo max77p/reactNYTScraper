@@ -10,6 +10,7 @@ class Home extends Component {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
 
     this.state = {
       search: "",
@@ -73,22 +74,51 @@ class Home extends Component {
       alert("please input at least search"); //tells user to at least put search item
     }
 
-    axios.get(queryURL).then(res => {
-      //   console.log(Object.keys(res));
-      //   console.log(res);
-      //   console.log(res.data.response.docs);
-      var data = res.data.response.docs;
+    axios
+      .get(queryURL)
+      .then(res => {
+        //   console.log(Object.keys(res));
+        //   console.log(res);
+        //   console.log(res.data.response.docs);
+        var data = res.data.response.docs;
 
-      this.setState(prevState => {
-        return {
-          articles: [...prevState.articles, ...data]
-        };
-      });
-      
-    }).then(x=>{
+        this.setState(prevState => {
+          return {
+            articles: [...prevState.articles, ...data]
+          };
+        });
+      })
+      .then(x => {
         // console.log(this.state.articles);
         console.log(x);
-    })
+      });
+  };
+
+  handleSave = event => {
+    event.preventDefault();
+    console.log("save btn was clicked");
+    console.log(event.target.getAttribute("data-id"));
+    var id = event.target.getAttribute("data-id");
+    // API.saveArticle({
+
+    // })
+    console.log(this.state.articles);
+    this.state.articles.map(x => {
+      if (x._id === id) {
+        console.log(x.snippet);
+        console.log(x.web_url);
+        console.log(x.pubdate);
+        console.log(x.author);
+        API.saveArticle({
+          title: x.snippet,
+          link: x.web_url,
+          pubdate: x.pubdate,
+          author: x.author
+        })
+          .then(res => console.log(res))
+          .catch(err => console.log(err.response));
+      }
+    });
   };
 
   render() {
@@ -170,7 +200,7 @@ class Home extends Component {
           </form>
         </div>
       </div>,
-      <Results articles={this.state.articles}/>
+      <Results articles={this.state.articles} click={this.handleSave} />
     ];
   }
 }

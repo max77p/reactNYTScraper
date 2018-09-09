@@ -1,18 +1,14 @@
 const db = require("../models");
 
 module.exports = {
+  save: function(req, res) {
+    db.Article.create(req.body)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
   findAll: function(req, res) {
-    queryURL =
-      "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
-      "&q=" +
-      search;
-    event.preventDefault();
-
-    $.ajax({
-      url: queryURL,
-      method: "GET"
-    }).then(function(response) {
-      console.log(response);
-    });
+    db.Article.find(req.query)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   }
 };
