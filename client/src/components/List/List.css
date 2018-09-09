@@ -1,0 +1,22 @@
+/* .list-group-item{
+    display:list-item;
+} */
+
+.listRow{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.blockLeft{
+    width:80%;
+}
+
+.blockRight{
+    display:flex;
+    justify-content: flex-end;
+    width:20%;
+}
+
+.blockLeft p{
+    margin:0;
+}
