@@ -6,18 +6,13 @@
   opacity: 0.9;
   z-index: 1050;
   left: 50%;
-  opacity: 1;
-	animation-name: fadeInOpacity;
-	animation-iteration-count: 1;
-	animation-timing-function: ease-in-out;
-	animation-duration: 2s;
-
 }
-@keyframes fadeInOpacity {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
+
+.open{
+  color:red;
+  display:inherit;
+}
+
+.close1{
+  display:none;
 }

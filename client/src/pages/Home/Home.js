@@ -17,6 +17,7 @@ class Home extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClear = this.handleClear.bind(this);
+    this.handleclose = this.handleclose.bind(this);
 
     this.state = {
       search: "",
@@ -26,7 +27,8 @@ class Home extends Component {
       articles: [],
       activeClass: 0,
       articlesaved: null,
-      prevalert: null
+      prevalert: null,
+      onoff: false
     };
   }
 
@@ -50,9 +52,16 @@ class Home extends Component {
       this.setState(prevState => {
         return {
           articlesaved: data,
-          prevalert: prevState.articlesaved
+          prevalert: prevState.articlesaved,
+          onoff: true
         };
       });
+
+      setTimeout(()=>{
+          this.setState({
+              onoff:false
+          });
+      },5000);
     });
   };
 
@@ -180,14 +189,25 @@ class Home extends Component {
     });
   };
 
+  handleclose = event => {
+    event.preventDefault();
+    console.log(this.state.onoff);
+  };
+
   render() {
     let show = null;
-    console.log(this.state.articlesaved);
-    console.log(this.state.prevalert);
+    // console.log(this.state.articlesaved);
+    // console.log(this.state.prevalert);
     if (this.state.articlesaved === this.state.prevalert) {
       console.log("they are equal");
     } else {
-      show = <Notif saved={this.state.articlesaved}/>;
+      show = (
+        <Notif
+          saved={this.state.articlesaved}
+          click={this.handleclose}
+          value={this.state.onoff}
+        />
+      );
       console.log("not equal");
     }
 
