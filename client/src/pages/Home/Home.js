@@ -213,7 +213,12 @@ class Home extends Component {
     event.preventDefault();
     this.setState(prevState => {
       return {
-        articles: []
+        articles: [],
+        searched: 0,
+        search: "",
+        records: "",
+        startYear: "",
+        endYear: ""
       };
     });
   };
