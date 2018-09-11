@@ -1,10 +1,11 @@
 import React from "react";
 import "./Notif.css";
 const Notif = props => {
+
   return (
     <div
       id="message1"
-      className="alert alert-warning alert-dismissable flyover flyover-centered"
+      className="alert alert-warning alert-dismissable flyover flyover-centered dontshow"
     >
       <button
         type="button"

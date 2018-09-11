@@ -6,7 +6,7 @@ import Saved from "./pages/Saved";
 
 const App = () => (
   <Router>
-    <div className="container">
+    <div className="container" >
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/Home" component={Home} />

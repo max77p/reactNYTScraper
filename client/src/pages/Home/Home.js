@@ -17,7 +17,6 @@ class Home extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClear = this.handleClear.bind(this);
-  
 
     this.state = {
       search: "",
@@ -27,7 +26,7 @@ class Home extends Component {
       articles: [],
       activeClass: 0,
       articlesaved: null,
-      prevalert:null
+      prevalert: null
     };
   }
 
@@ -39,18 +38,15 @@ class Home extends Component {
       [name]: value
     });
   }
-  
 
   componentDidMount() {
-    //    console.log("test");
     this.loaddata();
   }
 
- 
   loaddata = eldata => {
     console.log("updated");
     socket.on("send to all", data => {
-    //   console.log(data);
+      //   console.log(data);
       this.setState(prevState => {
         return {
           articlesaved: data,
@@ -59,7 +55,6 @@ class Home extends Component {
       });
     });
   };
-
 
   handleSearch = event => {
     event.preventDefault();
@@ -108,7 +103,7 @@ class Home extends Component {
     axios.get(queryURL).then(res => {
       //   console.log(Object.keys(res));
       //   console.log(res);
-      //   console.log(res.data.response.docs);
+      console.log(res.data.response.docs);
       var data = res.data.response.docs;
 
       this.setState(prevState => {
@@ -128,9 +123,10 @@ class Home extends Component {
 
     // console.log(this.state.articles);
     this.state.articles.map(x => {
-      // console.log(x);
+      console.log(x);
       var pubdate;
       var author;
+      var snippet;
       if (x._id === id) {
         // console.log(x.snippet);
         // console.log(x.web_url);
@@ -153,21 +149,26 @@ class Home extends Component {
         } else {
           author = "Author not available";
         }
+
+        if (x.snippet !== "") {
+          snippet = x.snippet;
+        } else {
+          snippet = "No Title available";
+        }
         API.saveArticle({
-          snippet: x.snippet,
+          snippet: snippet,
           link: x.web_url,
           pubdate: pubdate,
           author: author
         })
           .then(res => {
-            // console.log(res);
+            console.log(res);
             socket.emit("saved", res.data.snippet);
             //  this.send();
           })
           .catch(err => console.log(err.response));
       }
     });
-
   };
 
   handleClear = event => {
@@ -183,14 +184,13 @@ class Home extends Component {
     let show = null;
     console.log(this.state.articlesaved);
     console.log(this.state.prevalert);
-    if (this.state.articlesaved===this.state.prevalert) {
+    if (this.state.articlesaved === this.state.prevalert) {
       console.log("they are equal");
+    } else {
+      show = <Notif saved={this.state.articlesaved}/>;
+      console.log("not equal");
     }
-    else{
-        show = <Notif saved={this.state.articlesaved} />;
-        console.log("not equal");
-    }
-    
+
     return [
       show,
       <Nav
