@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import Jumbotron from "../../components/Jumbotron";
 import Nav from "../../components/Nav";
+import Notif from "../../components/Notif";
 import { Results } from "../../components/Results";
+import "./Home.css";
 import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:3001");
 
 class Home extends Component {
   constructor(props) {
@@ -13,6 +17,7 @@ class Home extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClear = this.handleClear.bind(this);
+  
 
     this.state = {
       search: "",
@@ -20,7 +25,9 @@ class Home extends Component {
       startYear: "",
       endYear: "",
       articles: [],
-      activeClass:0
+      activeClass: 0,
+      articlesaved: null,
+      prevalert:null
     };
   }
 
@@ -32,17 +39,38 @@ class Home extends Component {
       [name]: value
     });
   }
+  
+
+  componentDidMount() {
+    //    console.log("test");
+    this.loaddata();
+  }
+
+ 
+  loaddata = eldata => {
+    console.log("updated");
+    socket.on("send to all", data => {
+    //   console.log(data);
+      this.setState(prevState => {
+        return {
+          articlesaved: data,
+          prevalert: prevState.articlesaved
+        };
+      });
+    });
+  };
+
 
   handleSearch = event => {
     event.preventDefault();
-    console.log("button was clicked");
+    // console.log("button was clicked");
+
     var queryURL;
     var search = this.state.search;
     var records = this.state.records;
     var startyear = this.state.startYear;
     var endyear = this.state.endYear;
 
-    var queryUrl;
     if (search && !startyear && !endyear) {
       //gives whatever search
       queryURL =
@@ -77,51 +105,69 @@ class Home extends Component {
       alert("please input at least search"); //tells user to at least put search item
     }
 
-    axios
-      .get(queryURL)
-      .then(res => {
-        //   console.log(Object.keys(res));
-        //   console.log(res);
-        //   console.log(res.data.response.docs);
-        var data = res.data.response.docs;
+    axios.get(queryURL).then(res => {
+      //   console.log(Object.keys(res));
+      //   console.log(res);
+      //   console.log(res.data.response.docs);
+      var data = res.data.response.docs;
 
-        this.setState(prevState => {
-          return {
-            articles: [...prevState.articles, ...data]
-          };
-        });
-      })
-      .then(x => {
-        // console.log(this.state.articles);
-        console.log(x);
+      this.setState(prevState => {
+        return {
+          articles: [...prevState.articles, ...data]
+        };
       });
+    });
   };
 
   handleSave = event => {
     event.preventDefault();
+    // this.send();
     console.log("save btn was clicked");
     console.log(event.target.getAttribute("data-id"));
     var id = event.target.getAttribute("data-id");
-    // API.saveArticle({
 
-    // })
-    console.log(this.state.articles);
+    // console.log(this.state.articles);
     this.state.articles.map(x => {
+      // console.log(x);
+      var pubdate;
+      var author;
       if (x._id === id) {
         // console.log(x.snippet);
         // console.log(x.web_url);
         // console.log(x.pub_date);
         // console.log(x["byline"].original);
+
+        // console.log(x)
+        if ("pub_date" in x) {
+          //check if publication date exists
+          pubdate = x.pub_date.slice(0, 10);
+          // console.log(pubdate);
+        } else {
+          pubdate = "Publication date not available";
+        }
+
+        if ("byline" in x) {
+          //check if author name exists in database
+          author = x["byline"].original;
+          // console.log(author);
+        } else {
+          author = "Author not available";
+        }
         API.saveArticle({
           snippet: x.snippet,
           link: x.web_url,
-          pubdate: x.pub_date,
-          author: x["byline"].original
+          pubdate: pubdate,
+          author: author
         })
-          .then(res => console.log(res))
+          .then(res => {
+            // console.log(res);
+            socket.emit("saved", res.data.snippet);
+            //  this.send();
+          })
           .catch(err => console.log(err.response));
       }
     });
+
   };
 
   handleClear = event => {
@@ -133,11 +179,24 @@ class Home extends Component {
     });
   };
 
-  
-
   render() {
+    let show = null;
+    console.log(this.state.articlesaved);
+    console.log(this.state.prevalert);
+    if (this.state.articlesaved===this.state.prevalert) {
+      console.log("they are equal");
+    }
+    else{
+        show = <Notif saved={this.state.articlesaved} />;
+        console.log("not equal");
+    }
+    
     return [
-        <Nav activeclass={this.state.activeClass}/>,
+      show,
+      <Nav
+        activeclass={this.state.activeClass}
+        saved={this.state.articlesaved}
+      />,
       <Jumbotron heading="New York Times Search" />,
       <div className="panel panel-info">
         <div className="panel-heading">

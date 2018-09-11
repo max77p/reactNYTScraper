@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 export default {
   saveArticle: function(articleData) {
     return axios.post("/api/articles", articleData);
@@ -14,3 +15,4 @@ export default {
     return axios.get("/api/articles/"+id);
   }
 };
+

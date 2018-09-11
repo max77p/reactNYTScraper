@@ -3,7 +3,7 @@ import "./List.css";
 import Button from "../Button";
 
 const List = props => {
-  console.log(props.articles);
+  // console.log(props.articles);
 
   return (
     <li className="eachArticle list-group-item">

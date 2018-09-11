@@ -1,0 +1,27 @@
+.flyover {
+    /* margin-top:-1000px; */
+     overflow: hidden;
+     position: fixed;
+     width: 50%;
+     opacity: 0.9;
+     z-index: 1050;
+     left:50%;
+     /* transition: all 1s ease; */
+     animation: FadeAnimation 5s ease-in 3s forwards;
+  }
+   
+  .flyover.in {
+    margin-top: 150px;
+  }
+
+  @keyframes FadeAnimation {
+    0% {
+      opacity: 1;
+      visibility: visible;
+    }
+  
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }

@@ -1,5 +1,8 @@
 .jumbotron {
     background-color: #263159;
     color: white;
-    text-align: center;
+    text-align: center;   
+    -webkit-box-shadow: 3px 10px 35px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 10px 35px -5px rgba(0,0,0,0.75);
+    box-shadow: 3px 10px 35px -5px rgba(0,0,0,0.75);
 }

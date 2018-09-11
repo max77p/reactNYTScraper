@@ -5,6 +5,7 @@ import { SavedResults } from "../../components/Results";
 import Jumbotron from "../../components/Jumbotron";
 import Nav from "../../components/Nav";
 
+
 class Saved extends Component {
   constructor(props) {
     super(props);
@@ -25,14 +26,14 @@ class Saved extends Component {
 
   handleDelete = (event, id) => {
     // event.preventDefault();
-    console.log("delete btn");
-    console.log(id);
+    // console.log("delete btn");
+    // console.log(id);
     API.deleteArticle(id)
       .then(res => this.loadArticles())
       .catch(err => console.log(err));
   };
   render() {
-    console.log(this.state.articles);
+    // console.log(this.state.articles);
     return [
       <Nav activeclass={this.state.activeClass}/>,
       <Jumbotron heading="Saved" />,

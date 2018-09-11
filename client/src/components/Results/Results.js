@@ -4,8 +4,8 @@ import List from "../List";
 
 export const Results = props => {
   let content = [];
-  console.log(props.articles);
-  console.log(Object.keys(props.articles))
+  // console.log(props.articles);
+  // console.log(Object.keys(props.articles))
   if (props.articles) {
     // content.push(<List articles={this.state.articles} />);
     props.articles.map(x => {
@@ -14,14 +14,14 @@ export const Results = props => {
       // console.log(x)
       if ("pub_date" in x) {//check if publication date exists
         pubdate = x.pub_date.slice(0, 10);
-        console.log(pubdate);
+        // console.log(pubdate);
       } else {
         pubdate = "Publication date not available";
       }
 
       if ("byline" in x) {//check if author name exists in database
         author = x["byline"].original;
-        console.log(author);
+        // console.log(author);
       } else {
         author = "Author not available";
       }
