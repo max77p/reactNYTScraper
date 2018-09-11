@@ -28,7 +28,10 @@ class Home extends Component {
       activeClass: 0,
       articlesaved: null,
       prevalert: null,
-      onoff: false
+      onoff: false,
+      currsearch: "",
+      prevsearch: "",
+      searched: 0
     };
   }
 
@@ -57,11 +60,11 @@ class Home extends Component {
         };
       });
 
-      setTimeout(()=>{
-          this.setState({
-              onoff:false
-          });
-      },5000);
+      setTimeout(() => {
+        this.setState({
+          onoff: false
+        });
+      }, 5000);
     });
   };
 
@@ -75,12 +78,25 @@ class Home extends Component {
     var startyear = this.state.startYear;
     var endyear = this.state.endYear;
 
+    this.setState(prevState => {
+      return {
+        searched: prevState.searched + 1,
+        currsearch: search
+      };
+    });
+
+    console.log(this.state.searched);
+    console.log(this.state.currsearch);
+
     if (search && !startyear && !endyear) {
       //gives whatever search
       queryURL =
         "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
         "&q=" +
-        search;
+        search +
+        "&sort=newest" +
+        "&page=" +
+        this.state.searched;
     } else if (search && startyear && endyear) {
       //gives specific search
       queryURL =
@@ -90,21 +106,30 @@ class Home extends Component {
         "&begin_date=" +
         startyear +
         "&end_date=" +
-        endyear;
+        endyear +
+        "&sort=newest" +
+        "&page=" +
+        this.state.searched;
     } else if (search && startyear && !endyear) {
       queryURL =
         "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
         "&q=" +
         search +
         "&begin_date=" +
-        startyear;
+        startyear +
+        "&sort=newest" +
+        "&page=" +
+        this.state.searched;
     } else if (search && !startyear && endyear) {
       queryURL =
         "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
         "&q=" +
         search +
         "&end_date=" +
-        endyear;
+        endyear +
+        "&sort=newest" +
+        "&page=" +
+        this.state.searched;
     } else {
       alert("please input at least search"); //tells user to at least put search item
     }
@@ -114,8 +139,12 @@ class Home extends Component {
       //   console.log(res);
       console.log(res.data.response.docs);
       var data = res.data.response.docs;
-
+      if (records > 0) {
+        data = data.splice(0, records);
+      }
+      console.log(data);
       this.setState(prevState => {
+        console.log([...prevState.articles]);
         return {
           articles: [...prevState.articles, ...data]
         };
