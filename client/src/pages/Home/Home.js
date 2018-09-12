@@ -88,17 +88,27 @@ class Home extends Component {
     console.log("current search term is: " + search);
     if (priorterm !== search) {
       //reset pagination
+      console.log("changed search");
       this.setState(
         prevState => {
           return {
-            page: 0
+            page: 0,
+            articles: [],
+            data: [],
+            hold: null,
+            show: null,
+            counter: 0
           };
         },
         function() {
+          localStorage.setItem("setData", JSON.stringify(this.state.data));
           this.apiCall();
         }
       );
-    } else if (priorterm === search &&(this.state.data.lengh == 0 || records > data2.length)) {
+    } else if (
+      priorterm === search &&
+      (this.state.data.lengh == 0 || records > data2.length)
+    ) {
       this.setState(
         prevState => {
           return {
@@ -107,16 +117,16 @@ class Home extends Component {
         },
         function() {
           this.apiCall();
-        });
-    }
-    else {
+        }
+      );
+    } else {
       this.apiCall();
     }
   };
 
   apiCall = () => {
     var queryURL;
-    var priorterm = localStorage.getItem("search");
+
     var search = this.state.search;
     var data2 = JSON.parse(localStorage.getItem("setData"));
     var records = this.state.records;
