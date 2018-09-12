@@ -22,6 +22,7 @@ class Home extends Component {
     this.state = {
       search: "",
       records: "",
+      defaultRecord: 10,
       startYear: "",
       endYear: "",
       articles: [],
@@ -36,8 +37,7 @@ class Home extends Component {
       data: [],
       hold: null,
       show: null,
-      counter: 0,
-      records: 0
+      counter: 0
     };
   }
 
@@ -76,18 +76,27 @@ class Home extends Component {
   handleSearch = event => {
     event.preventDefault();
     // console.log("button was clicked");
-    var data2 = JSON.parse(localStorage.getItem("setData"));
-    var priorterm = localStorage.getItem("search");
+    var priorterm = sessionStorage.getItem("search");
 
-    var search = this.state.search;
-    var data2 = JSON.parse(localStorage.getItem("setData"));
+    if (!this.state.records) {
+      this.setState({
+        records: this.state.defaultRecord
+      });
+    }
     var records = this.state.records;
-    var startyear = this.state.startYear;
-    var endyear = this.state.endYear;
+    var search = this.state.search;
+    var dataSession = JSON.parse(sessionStorage.getItem("setData"));
+    var searchSession = sessionStorage.getItem("search");
+
+    // var startyear = this.state.startYear;
+    // var endyear = this.state.endYear;
     console.log("prior search term is: " + priorterm);
     console.log("current search term is: " + search);
+    console.log("records chosen: " + records);
+    console.log("after refresh data: " + this.state.data);
+
     if (priorterm !== search) {
-      //reset pagination
+      //reset pagination and everything else if search term is different
       console.log("changed search");
       this.setState(
         prevState => {
@@ -101,13 +110,13 @@ class Home extends Component {
           };
         },
         function() {
-          localStorage.setItem("setData", JSON.stringify(this.state.data));
+          sessionStorage.setItem("setData", JSON.stringify(this.state.data));
           this.apiCall();
         }
       );
     } else if (
       priorterm === search &&
-      (this.state.data.lengh == 0 || records > data2.length)
+      (this.state.data.length == 0 || records > dataSession.length) //if search term is same again and temp data is empty or record requested is greater than temp data avail
     ) {
       this.setState(
         prevState => {
@@ -128,12 +137,12 @@ class Home extends Component {
     var queryURL;
 
     var search = this.state.search;
-    var data2 = JSON.parse(localStorage.getItem("setData"));
+    var dataSession = JSON.parse(sessionStorage.getItem("setData"));
     var records = this.state.records;
     var startyear = this.state.startYear;
     var endyear = this.state.endYear;
 
-    if (this.state.data.length == 0 || records > data2.length) {
+    if (this.state.data.length == 0 || records > dataSession.length) {
       console.log("pagination is: " + this.state.page);
 
       if (search && !startyear && !endyear) {
@@ -191,20 +200,20 @@ class Home extends Component {
           prevState => {
             return {
               data: [...prevState.data, ...x],
-              counter: prevState.counter + x.length, //leftover plus length of new items stored
-              records: records
+              counter: prevState.counter + x.length //leftover plus length of new items stored
+              // records: records
             };
           },
           function() {
             console.log(this.state.data);
-            localStorage.setItem("setData", JSON.stringify(this.state.data));
-            localStorage.setItem("search", search);
+            sessionStorage.setItem("setData", JSON.stringify(this.state.data));
+            sessionStorage.setItem("search", search);
             this.postToScreen(records, this.state.data);
           }
         );
       });
     } else {
-      var data = JSON.parse(localStorage.getItem("setData"));
+      var data = JSON.parse(sessionStorage.getItem("setData"));
       this.postToScreen(records, data);
     }
   };
@@ -215,7 +224,7 @@ class Home extends Component {
       console.log("thisrecordsRequested: " + this.state.records);
       console.log("leftovertoshow: " + data.length);
 
-      // var data = JSON.parse(localStorage.getItem("setData"));
+      // var data = JSON.parse(sessionStorage.getItem("setData"));
       // var data=this.state.data;
       console.log(data);
       // if this.data has items, then check if number of records requested by user is greater than 0 but less than 10, fo so show only that amount, keep rest in temp hold
@@ -232,7 +241,7 @@ class Home extends Component {
         function() {
           console.log("to show this: " + this.state.show);
           console.log("new counter: " + this.state.counter);
-          var data1 = localStorage.setItem(
+          var data1 = sessionStorage.setItem(
             "setData",
             JSON.stringify(this.state.data)
           );
@@ -247,8 +256,8 @@ class Home extends Component {
             },
             function() {
               console.log("final left over: " + this.state.data); //check to see what is left over
-              var data2 = JSON.parse(localStorage.getItem("setData"));
-              console.log("final localget: " + data2);
+              var dataSession = JSON.parse(sessionStorage.getItem("setData"));
+              console.log("final localget: " + dataSession);
             }
           ); //end of setstate
         }
@@ -310,7 +319,10 @@ class Home extends Component {
             socket.emit("saved", res.data.snippet);
             //  this.send();
           })
-          .catch(err => console.log(err.response));
+          .catch(err => {
+            console.log(err.response);
+            console.log(err.response.data.errmsg);
+          });
       }
     });
   };
