@@ -7,12 +7,3 @@
   z-index: 1050;
   left: 50%;
 }
-
-.open{
-  color:red;
-  display:inherit;
-}
-
-.close1{
-  display:none;
-}
