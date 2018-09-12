@@ -33,7 +33,7 @@ class Home extends Component {
       prevsearch: "",
       page: 0,
 
-      data: null,
+      data: [],
       hold: null,
       show: null,
       counter: 0,
@@ -65,7 +65,6 @@ class Home extends Component {
           onoff: true
         };
       });
-
       setTimeout(() => {
         this.setState({
           onoff: false
@@ -77,23 +76,56 @@ class Home extends Component {
   handleSearch = event => {
     event.preventDefault();
     // console.log("button was clicked");
+    var data2 = JSON.parse(localStorage.getItem("setData"));
+    var priorterm = localStorage.getItem("search");
 
-    var queryURL;
     var search = this.state.search;
+    var data2 = JSON.parse(localStorage.getItem("setData"));
+    var records = this.state.records;
+    var startyear = this.state.startYear;
+    var endyear = this.state.endYear;
+    console.log("prior search term is: " + priorterm);
+    console.log("current search term is: " + search);
+    if (priorterm !== search) {
+      //reset pagination
+      this.setState(
+        prevState => {
+          return {
+            page: 0
+          };
+        },
+        function() {
+          this.apiCall();
+        }
+      );
+    } else if (priorterm === search &&(this.state.data.lengh == 0 || records > data2.length)) {
+      this.setState(
+        prevState => {
+          return {
+            page: prevState.page + 1
+          };
+        },
+        function() {
+          this.apiCall();
+        });
+    }
+    else {
+      this.apiCall();
+    }
+  };
+
+  apiCall = () => {
+    var queryURL;
+    var priorterm = localStorage.getItem("search");
+    var search = this.state.search;
+    var data2 = JSON.parse(localStorage.getItem("setData"));
     var records = this.state.records;
     var startyear = this.state.startYear;
     var endyear = this.state.endYear;
 
-    // this.setState(prevState => {
-    //   return {
-    //     searched: prevState.searched + 1,
-    //     currsearch: search
-    //   };
-    // });
+    if (this.state.data.length == 0 || records > data2.length) {
+      console.log("pagination is: " + this.state.page);
 
-    console.log(this.state.searched);
-    console.log(this.state.currsearch);
-    if (this.state.data == null) {
       if (search && !startyear && !endyear) {
         //gives whatever search
         queryURL =
@@ -148,49 +180,71 @@ class Home extends Component {
         this.setState(
           prevState => {
             return {
-              data: x,
-              counter: prevState.counter + x.length,
+              data: [...prevState.data, ...x],
+              counter: prevState.counter + x.length, //leftover plus length of new items stored
               records: records
             };
           },
           function() {
             console.log(this.state.data);
-            localStorage.setItem("key", JSON.stringify(x));
-            this.postToScreen(records);
+            localStorage.setItem("setData", JSON.stringify(this.state.data));
+            localStorage.setItem("search", search);
+            this.postToScreen(records, this.state.data);
           }
         );
       });
+    } else {
+      var data = JSON.parse(localStorage.getItem("setData"));
+      this.postToScreen(records, data);
     }
   };
 
-  postToScreen = records => {
-    if (records > 0 && records < 10) {
-      console.log(records);
-      var data = JSON.parse(localStorage.getItem("key"));
+  postToScreen = (records, data) => {
+    if (this.state.records <= data.length) {
+      console.log("counter: " + this.state.counter);
+      console.log("thisrecordsRequested: " + this.state.records);
+      console.log("leftovertoshow: " + data.length);
+
+      // var data = JSON.parse(localStorage.getItem("setData"));
+      // var data=this.state.data;
       console.log(data);
       // if this.data has items, then check if number of records requested by user is greater than 0 but less than 10, fo so show only that amount, keep rest in temp hold
-      var show = data.slice(0, records);
-      var hold = data.slice(records, data.length + 1);
+      var show = data.slice(0, records); //number to show depending on record requested
+      var hold = data.slice(records, data.length + 1); //remainder to store here
       this.setState(
         prevState => {
           return {
             show: show,
-            hold: hold,
-            counter: prevState.counter - show //keep left over amount of items count in here
+            data: hold,
+            counter: prevState.counter - show.length //keep left over amount of items count in here, should be same length as data
           };
-        },//end of this setstate
+        }, //end of this setstate
         function() {
-          console.log(this.state.show);
-          console.log([...this.state.show]);
-
-          this.setState(prevState => {
-            console.log([...prevState.articles]);
-            return {
-              articles: [...prevState.articles, ...this.state.show]
-            };
-          }); //end of setstate
+          console.log("to show this: " + this.state.show);
+          console.log("new counter: " + this.state.counter);
+          var data1 = localStorage.setItem(
+            "setData",
+            JSON.stringify(this.state.data)
+          );
+          console.log("after setting: " + data1);
+          this.setState(
+            prevState => {
+              //send to articles array in state so component can mount the articles
+              console.log([...prevState.articles]);
+              return {
+                articles: [...prevState.articles, ...this.state.show]
+              };
+            },
+            function() {
+              console.log("final left over: " + this.state.data); //check to see what is left over
+              var data2 = JSON.parse(localStorage.getItem("setData"));
+              console.log("final localget: " + data2);
+            }
+          ); //end of setstate
         }
       );
+    } //end of first if statement
+    else {
     }
   };
 
