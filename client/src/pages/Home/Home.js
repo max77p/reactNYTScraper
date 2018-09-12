@@ -31,7 +31,13 @@ class Home extends Component {
       onoff: false,
       currsearch: "",
       prevsearch: "",
-      searched: 0
+      page: 0,
+
+      data: null,
+      hold: null,
+      show: null,
+      counter: 0,
+      records: 0
     };
   }
 
@@ -78,78 +84,114 @@ class Home extends Component {
     var startyear = this.state.startYear;
     var endyear = this.state.endYear;
 
-    this.setState(prevState => {
-      return {
-        searched: prevState.searched + 1,
-        currsearch: search
-      };
-    });
+    // this.setState(prevState => {
+    //   return {
+    //     searched: prevState.searched + 1,
+    //     currsearch: search
+    //   };
+    // });
 
     console.log(this.state.searched);
     console.log(this.state.currsearch);
-
-    if (search && !startyear && !endyear) {
-      //gives whatever search
-      queryURL =
-        "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
-        "&q=" +
-        search +
-        "&sort=newest" +
-        "&page=" +
-        this.state.searched;
-    } else if (search && startyear && endyear) {
-      //gives specific search
-      queryURL =
-        "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
-        "&q=" +
-        search +
-        "&begin_date=" +
-        startyear +
-        "&end_date=" +
-        endyear +
-        "&sort=newest" +
-        "&page=" +
-        this.state.searched;
-    } else if (search && startyear && !endyear) {
-      queryURL =
-        "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
-        "&q=" +
-        search +
-        "&begin_date=" +
-        startyear +
-        "&sort=newest" +
-        "&page=" +
-        this.state.searched;
-    } else if (search && !startyear && endyear) {
-      queryURL =
-        "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
-        "&q=" +
-        search +
-        "&end_date=" +
-        endyear +
-        "&sort=newest" +
-        "&page=" +
-        this.state.searched;
-    } else {
-      alert("please input at least search"); //tells user to at least put search item
-    }
-
-    axios.get(queryURL).then(res => {
-      //   console.log(Object.keys(res));
-      //   console.log(res);
-      console.log(res.data.response.docs);
-      var data = res.data.response.docs;
-      if (records > 0) {
-        data = data.splice(0, records);
+    if (this.state.data == null) {
+      if (search && !startyear && !endyear) {
+        //gives whatever search
+        queryURL =
+          "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
+          "&q=" +
+          search +
+          "&sort=newest" +
+          "&page=" +
+          this.state.page;
+      } else if (search && startyear && endyear) {
+        //gives specific search
+        queryURL =
+          "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
+          "&q=" +
+          search +
+          "&begin_date=" +
+          startyear +
+          "&end_date=" +
+          endyear +
+          "&sort=newest" +
+          "&page=" +
+          this.state.page;
+      } else if (search && startyear && !endyear) {
+        queryURL =
+          "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
+          "&q=" +
+          search +
+          "&begin_date=" +
+          startyear +
+          "&sort=newest" +
+          "&page=" +
+          this.state.page;
+      } else if (search && !startyear && endyear) {
+        queryURL =
+          "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=85a9b5f65ee34104ba2b489ac87cb883" +
+          "&q=" +
+          search +
+          "&end_date=" +
+          endyear +
+          "&sort=newest" +
+          "&page=" +
+          this.state.page;
+      } else {
+        alert("please input at least search"); //tells user to at least put search item
       }
-      console.log(data);
-      this.setState(prevState => {
-        console.log([...prevState.articles]);
-        return {
-          articles: [...prevState.articles, ...data]
-        };
+
+      axios.get(queryURL).then(res => {
+        //   console.log(Object.keys(res));
+        //   console.log(res);
+        console.log(res.data.response.docs);
+        var x = res.data.response.docs;
+        this.setState(
+          prevState => {
+            return {
+              data: x,
+              counter: prevState.counter + x.length,
+              records: records
+            };
+          },
+          function() {
+            console.log(this.state.data);
+            localStorage.setItem("key", JSON.stringify(x));
+            this.postToScreen(records);
+          }
+        );
       });
-    });
+    }
+  };
+
+  postToScreen = records => {
+    if (records > 0 && records < 10) {
+      console.log(records);
+      var data = JSON.parse(localStorage.getItem("key"));
+      console.log(data);
+      // if this.data has items, then check if number of records requested by user is greater than 0 but less than 10, fo so show only that amount, keep rest in temp hold
+      var show = data.slice(0, records);
+      var hold = data.slice(records, data.length + 1);
+      this.setState(
+        prevState => {
+          return {
+            show: show,
+            hold: hold,
+            counter: prevState.counter - show //keep left over amount of items count in here
+          };
+        },//end of this setstate
+        function() {
+          console.log(this.state.show);
+          console.log([...this.state.show]);
+
+          this.setState(prevState => {
+            console.log([...prevState.articles]);
+            return {
+              articles: [...prevState.articles, ...this.state.show]
+            };
+          }); //end of setstate
+        }
+      );
+    }
   };
 
   handleSave = event => {

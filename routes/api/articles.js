@@ -5,7 +5,10 @@ router
   .route("/")
   .get(articleController.findAll)
   .post(articleController.save);
-  
-router.route("/:id").get(articleController.findById).delete(articleController.deleteArticle);
+
+router
+  .route("/:id")
+  .get(articleController.findById)
+  .delete(articleController.deleteArticle);
 
 module.exports = router;
