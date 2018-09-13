@@ -28,5 +28,5 @@ NYT scraper and article saver using Reactjs
 ## Future implementation
 - modal view, so user can quick view an article before visiting the site
 - implementation of bootstrap pagination for better presentation
-- user login so saved articles is specific to the user
+- user authentication so saved articles is specific to the user
 
