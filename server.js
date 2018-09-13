@@ -27,9 +27,9 @@ var server = app.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
 
-let io = require("socket.io").listen(server);
-let socket=io.connect("https://hidden-journey-64256.herokuapp.com:"+PORT);
-io.sockets.on("connection", function(socket) {
+const io = require("socket.io")(server);
+
+io.on("connection", function(socket) {
   console.log("user connected");
 
   socket.on("saved", data => {
