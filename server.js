@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-if (process.env.NODE === "production") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
@@ -33,7 +33,7 @@ io.on("connection", function(socket) {
   console.log("user connected");
 
   socket.on("saved", data => {
-      console.log(data);
+    console.log(data);
     io.emit("send to all", data);
   });
 
