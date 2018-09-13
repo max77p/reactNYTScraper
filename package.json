@@ -32,9 +32,11 @@
     "if-env": "^1.0.4",
     "mongoose": "^5.2.13",
     "nodemon": "^1.18.4",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "yarn": "^1.9.4"
   },
   "engines": {
     "node": "8.10.0"
-  }
+  },
+  "devDependencies": {}
 }
