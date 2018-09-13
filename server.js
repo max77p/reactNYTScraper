@@ -36,7 +36,7 @@ io.on("connection", function(socket) {
 
   socket.on("saved", data => {
     console.log(data);
-    io.emit("send to all", data);
+    io.sockets.emit("send to all", data);
   });
 
   socket.on("disconnect", () => {
