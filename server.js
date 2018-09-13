@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const app = express();
+const server=require('http').Server(app);
+const io = require("socket.io")(server);
 const PORT = process.env.PORT || 3001;
 
 //define middleware here
@@ -23,11 +25,11 @@ mongoose.connect(
 );
 
 //start the api server
-var server = app.listen(PORT, function() {
+server.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
 
-const io = require("socket.io").listen(server);
+
 io.on("connection", function(socket) {
   console.log("user connected");
 
