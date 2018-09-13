@@ -26,9 +26,8 @@ mongoose.connect(
 var server = app.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
-var host="https://hidden-journey-64256.herokuapp.com:"+PORT;
-const io = require("socket.io")(host);
-const articles = [];
+
+const io = require("socket.io")(server);
 io.on("connection", function(socket) {
   console.log("user connected");
 
