@@ -4,7 +4,8 @@ import API from "../../utils/API";
 import { SavedResults } from "../../components/Results";
 import Jumbotron from "../../components/Jumbotron";
 import Nav from "../../components/Nav";
-
+import io from "socket.io-client";
+const socket = io.connect("https://nytreactapp2018.herokuapp.com");
 
 class Saved extends Component {
   constructor(props) {
