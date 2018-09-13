@@ -18,6 +18,8 @@ NYT scraper and article saver using Reactjs
 ## Technologies Used
 - React.js
 - Socket.io
+- Express
+- Mongoose
 - Node
 - Bootstrap
 - HTML
