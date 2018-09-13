@@ -27,17 +27,17 @@ var server = app.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
 
-const io = require("socket.io")(server);
-const articles = [];
-io.on("connection", function(socket) {
-  console.log("user connected");
+// const io = require("socket.io")(server);
+// const articles = [];
+// io.on("connection", function(socket) {
+//   console.log("user connected");
 
-  socket.on("saved", data => {
-      console.log(data);
-    io.emit("send to all", data);
-  });
+//   socket.on("saved", data => {
+//       console.log(data);
+//     io.emit("send to all", data);
+//   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-});
+//   socket.on("disconnect", () => {
+//     console.log("user disconnected");
+//   });
+// });
