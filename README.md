@@ -14,7 +14,6 @@ NYT scraper and article saver using Reactjs
             - all of this prevents unnecessary server calls
 - if new search is made everything is cleared and program starts again
 - on saving of article, socket.io sends a notification to all users connected to app except the person who saved it
-- 
 
 ## Technologies Used
 - React.js
