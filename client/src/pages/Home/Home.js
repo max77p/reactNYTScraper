@@ -8,7 +8,7 @@ import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
-const socket = io.connect("https://hidden-journey-64256.herokuapp.com/:3001");
+const socket = io.connect("https://hidden-journey-64256.herokuapp.com");
 
 class Home extends Component {
   constructor(props) {
