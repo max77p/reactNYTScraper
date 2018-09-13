@@ -1,5 +1,5 @@
 {
-  "name": "reactNYTSearch",
+  "name": "mern",
   "version": "1.0.0",
   "description": "NYT scraper and article saver using Reactjs",
   "main": "server.js",
