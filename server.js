@@ -28,8 +28,8 @@ var server = app.listen(PORT, function() {
 });
 
 let io = require("socket.io").listen(server);
-
-io.on("connection", function(socket) {
+let socket=io.connect("https://hidden-journey-64256.herokuapp.com:"+PORT);
+io.sockets.on("connection", function(socket) {
   console.log("user connected");
 
   socket.on("saved", data => {
