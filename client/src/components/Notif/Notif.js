@@ -1,7 +1,7 @@
 import React from "react";
 import "./Notif.css";
+
 const Notif = props => {
-  console.log(props.value);
   if (!props.value) {
     return null;
   } else {
@@ -17,10 +17,11 @@ const Notif = props => {
           className="close"
           data-hide="alert"
           aria-hidden="true"
-          onClick={() => props.click}
+          onClick={event => props.click(event)}
         >
           ×
         </button>
+
         <strong>New Article saved!</strong>
         {props.saved}
       </div>

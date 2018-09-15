@@ -37,7 +37,8 @@ class Home extends Component {
       data: [],
       hold: null,
       show: null,
-      counter: 0
+      counter: 0,
+      closeclicked: false
     };
   }
 
@@ -343,21 +344,28 @@ class Home extends Component {
 
   handleclose = event => {
     event.preventDefault();
-    console.log(this.state.onoff);
+    console.log("close clicked");
+    this.setState(prevState=>{
+      return{
+        onoff:false
+      }
+    })
   };
 
   render() {
     let show = null;
+    console.log(this.props.notifs);
     // console.log(this.state.articlesaved);
     // console.log(this.state.prevalert);
-    if (this.state.articlesaved === this.state.prevalert) {
+    if (this.state.articlesaved === this.state.prevalert && !this.state.onoff) {
       console.log("they are equal");
-    } else {
+    } else if (this.state.onoff) {
       show = (
         <Notif
           saved={this.state.articlesaved}
           click={this.handleclose}
           value={this.state.onoff}
+          remove={false}
         />
       );
       console.log("not equal");
